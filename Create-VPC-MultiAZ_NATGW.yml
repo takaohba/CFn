@@ -1,0 +1,307 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  NATGatewayACreate: 
+    Default: true
+    Type: String
+    AllowedValues: 
+      - true
+      - false
+
+  NATGatewayCCreate:
+    Default: true
+    Type: String
+    AllowedValues:
+      - true
+      - false
+
+# ------------------------------------------------------------#
+# Conditions
+# ------------------------------------------------------------# 
+Conditions: 
+  IsCreateNATGatewayA: !Equals [ !Ref NATGatewayACreate, true ]
+  IsCreateNATGatewayAfalse: !Equals [ !Ref NATGatewayACreate, false ]
+
+  IsCreateNATGatewayC: !Equals [ !Ref NATGatewayCCreate, true ]
+  IsCreateNATGatewayCfalse: !Equals [ !Ref NATGatewayCCreate, false ]
+
+Resources:
+# VPC Create
+  DemoVPC:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: 'true'
+      EnableDnsHostnames: 'true'
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: DemoVPC
+
+# IGW Create      
+  DemoIGW:
+    Type: 'AWS::EC2::InternetGateway'
+    Properties: {}
+  GWAttach:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties:
+      InternetGatewayId: !Ref DemoIGW
+      VpcId: !Ref DemoVPC
+
+# PublicRouteTable01 Create
+  DemoPublicRouteTable01:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref DemoVPC
+      Tags:
+        - Key: Name
+          Value: DemoPublicRouteTable01
+  DemoPublicRoute01:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      RouteTableId: !Ref DemoPublicRouteTable01
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref DemoIGW
+
+# PublicRouteTable02 Create
+  DemoPublicRouteTable02:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref DemoVPC
+      Tags:
+        - Key: Name
+          Value: DemoPublicRouteTable02
+  DemoPublicRoute02:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      RouteTableId: !Ref DemoPublicRouteTable02
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref DemoIGW
+
+# PublicSubnet01 Create
+  DemoPublicSubnet01:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref DemoVPC
+      CidrBlock: 10.0.1.0/24
+      MapPublicIpOnLaunch: 'True'
+      AvailabilityZone: !Select 
+        - '0'
+        - !GetAZs ''
+      Tags:
+        - Key: Name
+          Value: DemoPublicSubnet01
+    DependsOn:
+      - DemoIGW
+
+# PublicSubnetRouteTable01Association      
+  DemoPublicSubnetRouteTableAssociation01:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref DemoPublicSubnet01
+      RouteTableId: !Ref DemoPublicRouteTable01
+
+# PublicSubnet02 Create
+  DemoPublicSubnet02:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref DemoVPC
+      CidrBlock: 10.0.2.0/24
+      MapPublicIpOnLaunch: 'True'
+      AvailabilityZone: !Select 
+        - '1'
+        - !GetAZs ''
+      Tags:
+        - Key: Name
+          Value: DemoPublicSubnet02
+    DependsOn:
+      - DemoIGW
+
+# PublicSubnetRouteTable02Association
+  DemoPublicSubnetRouteTableAssociation02:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref DemoPublicSubnet02
+      RouteTableId: !Ref DemoPublicRouteTable02
+
+# PrivateSubnetRouteTable01 Create
+  DemoPrivateRouteTable01:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref DemoVPC
+      Tags:
+        - Key: Name
+          Value: DemoPrivateRouteTable01
+
+# PrivateSubnetRoutetable02 Cteate
+  DemoPrivateRouteTable02:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref DemoVPC
+      Tags:
+        - Key: Name
+          Value: DemoPrivateRouteTable02
+
+# PrivateSubnet01 Create
+  DemoPrivateSubnet01:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref DemoVPC
+      CidrBlock: 10.0.4.0/23
+      AvailabilityZone: !Select 
+        - '0'
+        - !GetAZs ''
+      Tags:
+        - Key: Name
+          Value: DemoPrivateSubnet01
+
+# PrivateSubnet02 Create
+  DemoPrivateSubnet02:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref DemoVPC
+      CidrBlock: 10.0.6.0/23
+      AvailabilityZone: !Select 
+        - '1'
+        - !GetAZs ''
+      Tags:
+        - Key: Name
+          Value: DemoPrivateSubnet02
+
+# PrivateSubnetRouteTable01 Association  
+  DemoPrivateSubnetRouteTableAssociation01:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref DemoPrivateSubnet01
+      RouteTableId: !Ref DemoPrivateRouteTable01
+
+# PrivateSubnetRouteTable02 Association
+  DemoPrivateSubnetRouteTableAssociation02:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref DemoPrivateSubnet02
+      RouteTableId: !Ref DemoPrivateRouteTable02
+
+# NATGatewayA Create
+  NATGatewayA: 
+    Type: "AWS::EC2::NatGateway"
+    Condition: IsCreateNATGatewayA
+    Properties: 
+      AllocationId: !GetAtt NATGatewayAEIP.AllocationId 
+      SubnetId: !Ref DemoPublicSubnet01
+      Tags: 
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-natgw-a"
+
+# NATGateway For EIP Create
+  NATGatewayAEIP: 
+    Type: "AWS::EC2::EIP"
+    Condition: IsCreateNATGatewayA
+    Properties: 
+      Domain: vpc
+
+# PrivateRouteTable01 Update
+  DemoPrivateRouteTable01Update: 
+    Type: "AWS::EC2::Route"
+    Condition: IsCreateNATGatewayA
+    Properties: 
+      RouteTableId: !Ref DemoPrivateRouteTable01
+      DestinationCidrBlock: "0.0.0.0/0"
+      NatGatewayId: !Ref NATGatewayA
+    DependsOn:
+      - DemoPrivateSubnetRouteTableAssociation01
+
+# PrivateRouteTable02 Update (NATGatewayC NO Create)
+  DemoPrivateRouteTable02Update: 
+    Type: "AWS::EC2::Route"
+    Condition: IsCreateNATGatewayCfalse
+    Properties: 
+      RouteTableId: !Ref DemoPrivateRouteTable02
+      DestinationCidrBlock: "0.0.0.0/0"
+      NatGatewayId: !Ref NATGatewayA
+    DependsOn:
+      - DemoPrivateSubnetRouteTableAssociation02      
+
+# ------------------------------------------------------------#
+#  NAT Gateway AZ:C
+# ------------------------------------------------------------#
+# NATGatewayC Create
+  NATGatewayC:
+    Type: "AWS::EC2::NatGateway"
+    Condition: IsCreateNATGatewayC
+    Properties:
+      AllocationId: !GetAtt NATGatewayCEIP.AllocationId 
+      SubnetId: !Ref DemoPublicSubnet02
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-natgw-c"
+
+# NATGateway For EIP Create
+  NATGatewayCEIP:
+    Type: "AWS::EC2::EIP"
+    Condition: IsCreateNATGatewayC
+    Properties:
+      Domain: vpc
+
+# PrivateRouteTable02 Update
+  DemoPrivateRouteTable02Update:
+    Type: "AWS::EC2::Route"
+    Condition: IsCreateNATGatewayC
+    Properties:
+      RouteTableId: !Ref DemoPrivateRouteTable02
+      DestinationCidrBlock: "0.0.0.0/0"
+      NatGatewayId: !Ref NATGatewayC
+    DependsOn:
+      - DemoPrivateSubnetRouteTableAssociation02
+
+# PrivateRouteTable01 Update (NATGatewayA NO Create)
+  DemoPrivateRouteTable01Update: 
+    Type: "AWS::EC2::Route"
+    Condition: IsCreateNATGatewayAfalse
+    Properties: 
+      RouteTableId: !Ref DemoPrivateRouteTable01
+      DestinationCidrBlock: "0.0.0.0/0"
+      NatGatewayId: !Ref NATGatewayC
+    DependsOn:
+      - DemoPrivateSubnetRouteTableAssociation01
+
+Outputs:
+  DemoVPC:
+    Description: The ID of the VPC
+    Value: !Ref DemoVPC
+    Export:
+      Name: !Sub "${AWS::StackName}-VPCID"
+  DemoPublicSubnet01:
+    Description: The ID of the PublicSubnet01
+    Value: !Ref DemoPublicSubnet01
+    Export:
+      Name: !Sub "${AWS::StackName}-SubnetID-Pub01"
+  DemoPublicSubnet02:
+    Description: The ID of the PublicSubnet02
+    Value: !Ref DemoPublicSubnet02
+    Export:
+      Name: !Sub "${AWS::StackName}-SubnetID-Pub02"    
+  DemoPrivateSubnet01:
+    Description: The ID of the PrivateSubnet01
+    Value: !Ref DemoPrivateSubnet01
+    Export:
+      Name: !Sub "${AWS::StackName}-SubnetID-Pri01"
+  DemoPrivateSubnet02:
+    Description: The ID of the PrivateSubnet02
+    Value: !Ref DemoPrivateSubnet02
+    Export:
+      Name: !Sub "${AWS::StackName}-SubnetID-Pri02"
+
+# NATGateway EIP
+  NATGatewayAEIP:
+    Condition: IsCreateNATGatewayA
+    Description: NATGatewayA EIP   
+    Value: !Ref NATGatewayAEIP
+    Export:
+      Name: !Sub "${AWS::StackName}-natgw-a-eip"
+
+  NATGatewayCEIP:
+    Condition: IsCreateNATGatewayC
+    Description: NATGatewayC EIP    
+    Value: !Ref NATGatewayCEIP
+    Export:
+      Name: !Sub "${AWS::StackName}-natgw-c-eip"

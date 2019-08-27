@@ -1,0 +1,317 @@
+AWSTemplateFormatVersion: 2010-09-09
+Desctiption : Create Hanson IAM User
+Resources:
+  HandsonGroup:
+    Type: "AWS::IAM::Group"
+    Properties:
+      GroupName: HandsonGroup
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/PowerUserAccess" 
+      Path: '/'  
+
+  HandsonUser01:
+    Type: "AWS::IAM::User"
+    Properties:
+      Groups:
+        - HandsonGroup
+      LoginProfile:
+        Password: HandsonUser01+001
+        PasswordResetRequired: True
+      UserName: HandsonUser01
+
+  HandsonUser02:
+    Type: "AWS::IAM::User"
+    Properties:
+      Groups:
+        - HandsonGroup
+      LoginProfile:
+        Password: HandsonUser02+002
+        PasswordResetRequired: True
+      UserName: HandsonUser02     
+
+  HandsonUser03:
+    Type: "AWS::IAM::User"
+    Properties:
+      Groups:
+        - HandsonGroup
+      LoginProfile:
+        Password: HandsonUser03+003
+        PasswordResetRequired: True
+      UserName: HandsonUser03     
+
+  HandsonUser04:
+    Type: "AWS::IAM::User"
+    Properties:
+      Groups:
+        - HandsonGroup
+      LoginProfile:
+        Password: HandsonUser04+004
+        PasswordResetRequired: True
+      UserName: HandsonUser04
+
+  HandsonUser05:
+    Type: "AWS::IAM::User"
+    Properties:
+      Groups:
+        - HandsonGroup
+      LoginProfile:
+        Password: HandsonUser05+005
+        PasswordResetRequired: True
+      UserName: HandsonUser05
+
+  HandsonUser06:
+    Type: "AWS::IAM::User"
+    Properties:
+      Groups:
+        - HandsonGroup
+      LoginProfile:
+        Password: HandsonUser06+006
+        PasswordResetRequired: True
+      UserName: HandsonUser06
+
+  HandsonUser07:
+    Type: "AWS::IAM::User"
+    Properties:
+      Groups:
+        - HandsonGroup
+      LoginProfile:
+        Password: HandsonUser07+007
+        PasswordResetRequired: True
+      UserName: HandsonUser07
+
+  HandsonUser08:
+    Type: "AWS::IAM::User"
+    Properties:
+      Groups:
+        - HandsonGroup
+      LoginProfile:
+        Password: HandsonUser08+008
+        PasswordResetRequired: True
+      UserName: HandsonUser08
+
+  HandsonUser09:
+    Type: "AWS::IAM::User"
+    Properties:
+      Groups:
+        - HandsonGroup
+      LoginProfile:
+        Password: HandsonUser09+009
+        PasswordResetRequired: True
+      UserName: HandsonUser09
+
+  HandsonUser10:
+    Type: "AWS::IAM::User"
+    Properties:
+      Groups:
+        - HandsonGroup
+      LoginProfile:
+        Password: HandsonUser10+010
+        PasswordResetRequired: True
+      UserName: HandsonUser10
+
+  HandsonUser11:
+    Type: "AWS::IAM::User"
+    Properties:
+      Groups:
+        - HandsonGroup
+      LoginProfile:
+        Password: HandsonUser11+011
+        PasswordResetRequired: True
+      UserName: HandsonUser11
+
+  HandsonUser12:
+    Type: "AWS::IAM::User"
+    Properties:
+      Groups:
+        - HandsonGroup
+      LoginProfile:
+        Password: HandsonUser12+012
+        PasswordResetRequired: True
+      UserName: HandsonUser12     
+
+  HandsonUser13:
+    Type: "AWS::IAM::User"
+    Properties:
+      Groups:
+        - HandsonGroup
+      LoginProfile:
+        Password: HandsonUser13+013
+        PasswordResetRequired: True
+      UserName: HandsonUser13     
+
+  HandsonUser14:
+    Type: "AWS::IAM::User"
+    Properties:
+      Groups:
+        - HandsonGroup
+      LoginProfile:
+        Password: HandsonUser14+014
+        PasswordResetRequired: True
+      UserName: HandsonUser14
+
+  HandsonUser15:
+    Type: "AWS::IAM::User"
+    Properties:
+      Groups:
+        - HandsonGroup
+      LoginProfile:
+        Password: HandsonUser15+015
+        PasswordResetRequired: True
+      UserName: HandsonUser15
+
+  HandsonUser16:
+    Type: "AWS::IAM::User"
+    Properties:
+      Groups:
+        - HandsonGroup
+      LoginProfile:
+        Password: HandsonUser16+016
+        PasswordResetRequired: True
+      UserName: HandsonUser16
+
+  HandsonUser17:
+    Type: "AWS::IAM::User"
+    Properties:
+      Groups:
+        - HandsonGroup
+      LoginProfile:
+        Password: HandsonUser17+017
+        PasswordResetRequired: True
+      UserName: HandsonUser17
+
+  HandsonUser18:
+    Type: "AWS::IAM::User"
+    Properties:
+      Groups:
+        - HandsonGroup
+      LoginProfile:
+        Password: HandsonUser18+018
+        PasswordResetRequired: True
+      UserName: HandsonUser18
+
+  HandsonUser19:
+    Type: "AWS::IAM::User"
+    Properties:
+      Groups:
+        - HandsonGroup
+      LoginProfile:
+        Password: HandsonUser19+019
+        PasswordResetRequired: True
+      UserName: HandsonUser19
+
+  HandsonUser20:
+    Type: "AWS::IAM::User"
+    Properties:
+      Groups:
+        - HandsonGroup
+      LoginProfile:
+        Password: HandsonUser20+020
+        PasswordResetRequired: True
+      UserName: HandsonUser20
+
+Outputs:
+  HandonGroup:
+    Description: HandsonGroup Information
+    Value: !Ref HandsonGroup
+    Export:
+      Name: !Sub "${AWS::StackName}-HandsonGroup"
+  HandonUser01:
+    Description: Password is 'HandsonUser01+001'
+    Value: !Ref HandsonUser01
+    Export:
+      Name: !Sub "${AWS::StackName}-User01"
+  HandonUser02:
+    Description: Password is 'HandsonUser02+002'
+    Value: !Ref HandsonUser02
+    Export:
+      Name: !Sub "${AWS::StackName}-User02"
+  HandonUser03:
+    Description: Password is 'HandsonUser03+003'
+    Value: !Ref HandsonUser03
+    Export:
+      Name: !Sub "${AWS::StackName}-User03"
+  HandonUser04:
+    Description: Password is 'HandsonUser04+004'
+    Value: !Ref HandsonUser04
+    Export:
+      Name: !Sub "${AWS::StackName}-User04"
+  HandonUser05:
+    Description: Password is 'HandsonUser05+005'
+    Value: !Ref HandsonUser05
+    Export:
+      Name: !Sub "${AWS::StackName}-User05"
+  HandonUser06:
+    Description: Password is 'HandsonUser06+006'
+    Value: !Ref HandsonUser06
+    Export:
+      Name: !Sub "${AWS::StackName}-User06"
+  HandonUser07:
+    Description: Password is 'HandsonUser07+007'
+    Value: !Ref HandsonUser07
+    Export:
+      Name: !Sub "${AWS::StackName}-User07"
+  HandonUser08:
+    Description: Password is 'HandsonUser08+008'
+    Value: !Ref HandsonUser08
+    Export:
+      Name: !Sub "${AWS::StackName}-User08"
+  HandonUser09:
+    Description: Password is 'HandsonUser09+009'
+    Value: !Ref HandsonUser09
+    Export:
+      Name: !Sub "${AWS::StackName}-User09"
+  HandonUser10:
+    Description: Password is 'HandsonUser10+010'
+    Value: !Ref HandsonUser10
+    Export:
+      Name: !Sub "${AWS::StackName}-User10"
+  HandonUser11:
+    Description: Password is 'HandsonUser11+011'
+    Value: !Ref HandsonUser11
+    Export:
+      Name: !Sub "${AWS::StackName}-User11"
+  HandonUser12:
+    Description: Password is 'HandsonUser12+012'
+    Value: !Ref HandsonUser12
+    Export:
+      Name: !Sub "${AWS::StackName}-User12"
+  HandonUser13:
+    Description: Password is 'HandsonUser13+013'
+    Value: !Ref HandsonUser13
+    Export:
+      Name: !Sub "${AWS::StackName}-User13"
+  HandonUser14:
+    Description: Password is 'HandsonUser14+014'
+    Value: !Ref HandsonUser14
+    Export:
+      Name: !Sub "${AWS::StackName}-User14"
+  HandonUser15:
+    Description: Password is 'HandsonUser15+015'
+    Value: !Ref HandsonUser15
+    Export:
+      Name: !Sub "${AWS::StackName}-User15"
+  HandonUser16:
+    Description: Password is 'HandsonUser16+016'
+    Value: !Ref HandsonUser16
+    Export:
+      Name: !Sub "${AWS::StackName}-User16"
+  HandonUser17:
+    Description: Password is 'HandsonUser17+017'
+    Value: !Ref HandsonUser17
+    Export:
+      Name: !Sub "${AWS::StackName}-User17"
+  HandonUser18:
+    Description: Password is 'HandsonUser18+018'
+    Value: !Ref HandsonUser18
+    Export:
+      Name: !Sub "${AWS::StackName}-User18"
+  HandonUser19:
+    Description: Password is 'HandsonUser19+019'
+    Value: !Ref HandsonUser19
+    Export:
+      Name: !Sub "${AWS::StackName}-User19"
+  HandonUser20:
+    Description: Password is 'HandsonUser20+020'
+    Value: !Ref HandsonUser20
+    Export:
+      Name: !Sub "${AWS::StackName}-User20"

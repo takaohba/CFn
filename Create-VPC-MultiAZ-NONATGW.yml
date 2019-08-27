@@ -1,0 +1,171 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  DemoVPC:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: 'true'
+      EnableDnsHostnames: 'true'
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: DemoVPC
+  DemoPublicSubnet01:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref DemoVPC
+      CidrBlock: 10.0.1.0/24
+      MapPublicIpOnLaunch: 'True'
+      AvailabilityZone: !Select 
+        - '0'
+        - !GetAZs ''
+      Tags:
+        - Key: Name
+          Value: DemoPublicSubnet01
+    DependsOn:
+      - DemoIGW
+  DemoPublicSubnetRouteTableAssociation01:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref DemoPublicSubnet01
+      RouteTableId: !Ref DemoPublicRouteTable01
+  DemoPublicSubnet02:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref DemoVPC
+      CidrBlock: 10.0.2.0/24
+      MapPublicIpOnLaunch: 'True'
+      AvailabilityZone: !Select 
+        - '1'
+        - !GetAZs ''
+      Tags:
+        - Key: Name
+          Value: DemoPublicSubnet02
+    DependsOn:
+      - DemoIGW
+  DemoPublicSubnetRouteTableAssociation02:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref DemoPublicSubnet02
+      RouteTableId: !Ref DemoPublicRouteTable02
+  DemoPrivateSubnet01:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref DemoVPC
+      CidrBlock: 10.0.4.0/23
+      AvailabilityZone: !Select 
+        - '0'
+        - !GetAZs ''
+      Tags:
+        - Key: Name
+          Value: DemoPrivateSubnet01
+  DemoPrivateSubnetRouteTableAssociation01:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref DemoPrivateSubnet01
+      RouteTableId: !Ref DemoPrivateRouteTable01
+  DemoPrivateSubnet02:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref DemoVPC
+      CidrBlock: 10.0.6.0/23
+      AvailabilityZone: !Select 
+        - '1'
+        - !GetAZs ''
+      Tags:
+        - Key: Name
+          Value: DemoPrivateSubnet02
+  DemoPrivateSubnetRouteTableAssociation02:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref DemoPrivateSubnet02
+      RouteTableId: !Ref DemoPrivateRouteTable02
+  DemoIGW:
+    Type: 'AWS::EC2::InternetGateway'
+    Properties: {}
+  GWAttach:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties:
+      InternetGatewayId: !Ref DemoIGW
+      VpcId: !Ref DemoVPC
+
+  DemoPublicRouteTable01:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref DemoVPC
+      Tags:
+        - Key: Name
+          Value: DemoPublicRouteTable01
+  DemoPublicRouteTable02:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref DemoVPC
+      Tags:
+        - Key: Name
+          Value: DemoPublicRouteTable02
+
+  DemoPublicRoute01:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      RouteTableId: !Ref DemoPublicRouteTable01
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref DemoIGW
+  DemoPublicRoute02:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      RouteTableId: !Ref DemoPublicRouteTable02
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref DemoIGW
+
+  DemoPrivateRouteTable01:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref DemoVPC
+      Tags:
+        - Key: Name
+          Value: DemoPrivateRouteTable01
+  DemoPrivateRouteTable02:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref DemoVPC
+      Tags:
+        - Key: Name
+          Value: DemoPrivateRouteTable02
+
+
+Outputs:
+  DemoVPC:
+    Description: The ID of the VPC
+    Value: !Ref DemoVPC
+    Export:
+      Name: !Sub "${AWS::StackName}-VPCID"
+  DemoPublicSubnet01:
+    Description: The ID of the PublicSubnet01
+    Value: !Ref DemoPublicSubnet01
+    Export:
+      Name: !Sub "${AWS::StackName}-SubnetID-Pub01"
+  DemoPublicSubnet02:
+    Description: The ID of the PublicSubnet02
+    Value: !Ref DemoPublicSubnet02
+    Export:
+      Name: !Sub "${AWS::StackName}-SubnetID-Pub02"    
+  DemoPrivateSubnet01:
+    Description: The ID of the PrivateSubnet01
+    Value: !Ref DemoPrivateSubnet01
+    Export:
+      Name: !Sub "${AWS::StackName}-SubnetID-Pri01"
+  DemoPrivateSubnet02:
+    Description: The ID of the PrivateSubnet02
+    Value: !Ref DemoPrivateSubnet02
+    Export:
+      Name: !Sub "${AWS::StackName}-SubnetID-Pri02"
+  DemoPrivateRouteTable01:
+    Description: The ID of the PrivateRouteTable01
+    Value: !Ref DemoPrivateRouteTable01
+    Export:
+      Name: !Sub "${AWS::StackName}-RouteTableID-Pri01"
+  DemoPrivateRouteTable02:
+    Description: The ID of the PrivateRouteTable02
+    Value: !Ref DemoPrivateRouteTable02
+    Export:
+      Name: !Sub "${AWS::StackName}-RouteTableID-Pri02"      
