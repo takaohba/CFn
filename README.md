@@ -1,2 +1,2 @@
 # CFn
-CloudFormation Template Repository
+AWS CloudFormation Template Repository
