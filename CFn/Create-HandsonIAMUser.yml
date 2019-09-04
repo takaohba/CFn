@@ -1,13 +1,28 @@
 AWSTemplateFormatVersion: 2010-09-09
-Desctiption : Create Hanson IAM User
+Description: Create Hanson IAM User
+
+Parameters:
+  Permissions: 
+    Default: PowerUser
+    Type: String
+    AllowedValues: 
+      - Admin
+      - PowerUser
+
+Mappings:
+  Policy:
+    Admin:
+      "Arn": "arn:aws:iam::aws:policy/AdministratorAccess"
+    PowerUser:
+      "Arn": "arn:aws:iam::aws:policy/PowerUserAccess"
+
 Resources:
   HandsonGroup:
     Type: "AWS::IAM::Group"
     Properties:
       GroupName: HandsonGroup
-      ManagedPolicyArns:
-      - "arn:aws:iam::aws:policy/PowerUserAccess" 
-      Path: '/'  
+      ManagedPolicyArns: !FindInMap [Policy, !Ref Permissions , Arn]
+      Path: '/'    
 
   HandsonUser01:
     Type: "AWS::IAM::User"
@@ -18,6 +33,8 @@ Resources:
         Password: HandsonUser01+001
         PasswordResetRequired: True
       UserName: HandsonUser01
+    DependsOn:
+      - HandsonGroup
 
   HandsonUser02:
     Type: "AWS::IAM::User"
@@ -28,6 +45,8 @@ Resources:
         Password: HandsonUser02+002
         PasswordResetRequired: True
       UserName: HandsonUser02     
+    DependsOn:
+      - HandsonGroup
 
   HandsonUser03:
     Type: "AWS::IAM::User"
@@ -37,7 +56,9 @@ Resources:
       LoginProfile:
         Password: HandsonUser03+003
         PasswordResetRequired: True
-      UserName: HandsonUser03     
+      UserName: HandsonUser03
+    DependsOn:
+      - HandsonGroup      
 
   HandsonUser04:
     Type: "AWS::IAM::User"
@@ -48,6 +69,8 @@ Resources:
         Password: HandsonUser04+004
         PasswordResetRequired: True
       UserName: HandsonUser04
+    DependsOn:
+      - HandsonGroup
 
   HandsonUser05:
     Type: "AWS::IAM::User"
@@ -58,6 +81,8 @@ Resources:
         Password: HandsonUser05+005
         PasswordResetRequired: True
       UserName: HandsonUser05
+    DependsOn:
+      - HandsonGroup
 
   HandsonUser06:
     Type: "AWS::IAM::User"
@@ -68,6 +93,8 @@ Resources:
         Password: HandsonUser06+006
         PasswordResetRequired: True
       UserName: HandsonUser06
+    DependsOn:
+      - HandsonGroup
 
   HandsonUser07:
     Type: "AWS::IAM::User"
@@ -78,6 +105,8 @@ Resources:
         Password: HandsonUser07+007
         PasswordResetRequired: True
       UserName: HandsonUser07
+    DependsOn:
+      - HandsonGroup
 
   HandsonUser08:
     Type: "AWS::IAM::User"
@@ -88,6 +117,8 @@ Resources:
         Password: HandsonUser08+008
         PasswordResetRequired: True
       UserName: HandsonUser08
+    DependsOn:
+      - HandsonGroup
 
   HandsonUser09:
     Type: "AWS::IAM::User"
@@ -98,6 +129,8 @@ Resources:
         Password: HandsonUser09+009
         PasswordResetRequired: True
       UserName: HandsonUser09
+    DependsOn:
+      - HandsonGroup
 
   HandsonUser10:
     Type: "AWS::IAM::User"
@@ -108,6 +141,8 @@ Resources:
         Password: HandsonUser10+010
         PasswordResetRequired: True
       UserName: HandsonUser10
+    DependsOn:
+      - HandsonGroup
 
   HandsonUser11:
     Type: "AWS::IAM::User"
@@ -118,6 +153,8 @@ Resources:
         Password: HandsonUser11+011
         PasswordResetRequired: True
       UserName: HandsonUser11
+    DependsOn:
+      - HandsonGroup
 
   HandsonUser12:
     Type: "AWS::IAM::User"
@@ -128,6 +165,8 @@ Resources:
         Password: HandsonUser12+012
         PasswordResetRequired: True
       UserName: HandsonUser12     
+    DependsOn:
+      - HandsonGroup
 
   HandsonUser13:
     Type: "AWS::IAM::User"
@@ -138,6 +177,8 @@ Resources:
         Password: HandsonUser13+013
         PasswordResetRequired: True
       UserName: HandsonUser13     
+    DependsOn:
+      - HandsonGroup
 
   HandsonUser14:
     Type: "AWS::IAM::User"
@@ -148,6 +189,8 @@ Resources:
         Password: HandsonUser14+014
         PasswordResetRequired: True
       UserName: HandsonUser14
+    DependsOn:
+      - HandsonGroup
 
   HandsonUser15:
     Type: "AWS::IAM::User"
@@ -158,6 +201,8 @@ Resources:
         Password: HandsonUser15+015
         PasswordResetRequired: True
       UserName: HandsonUser15
+    DependsOn:
+      - HandsonGroup
 
   HandsonUser16:
     Type: "AWS::IAM::User"
@@ -168,6 +213,8 @@ Resources:
         Password: HandsonUser16+016
         PasswordResetRequired: True
       UserName: HandsonUser16
+    DependsOn:
+      - HandsonGroup
 
   HandsonUser17:
     Type: "AWS::IAM::User"
@@ -178,6 +225,8 @@ Resources:
         Password: HandsonUser17+017
         PasswordResetRequired: True
       UserName: HandsonUser17
+    DependsOn:
+      - HandsonGroup
 
   HandsonUser18:
     Type: "AWS::IAM::User"
@@ -188,6 +237,8 @@ Resources:
         Password: HandsonUser18+018
         PasswordResetRequired: True
       UserName: HandsonUser18
+    DependsOn:
+      - HandsonGroup
 
   HandsonUser19:
     Type: "AWS::IAM::User"
@@ -198,6 +249,8 @@ Resources:
         Password: HandsonUser19+019
         PasswordResetRequired: True
       UserName: HandsonUser19
+    DependsOn:
+      - HandsonGroup
 
   HandsonUser20:
     Type: "AWS::IAM::User"
@@ -208,13 +261,10 @@ Resources:
         Password: HandsonUser20+020
         PasswordResetRequired: True
       UserName: HandsonUser20
+    DependsOn:
+      - HandsonGroup
 
 Outputs:
-  HandonGroup:
-    Description: HandsonGroup Information
-    Value: !Ref HandsonGroup
-    Export:
-      Name: !Sub "${AWS::StackName}-HandsonGroup"
   HandonUser01:
     Description: Password is 'HandsonUser01+001'
     Value: !Ref HandsonUser01
